@@ -1,0 +1,5 @@
+package com.andrezsegovia.ws.servlet;
+
+public class ServletMain extends HttpServlet{
+
+}

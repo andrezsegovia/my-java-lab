@@ -1,0 +1,36 @@
+package com.andrezsegovia.main;
+
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.andrezsegovia.database.DataBase;
+
+public class Mian {
+
+	public static void main(String[] args) throws SQLException {
+		// TODO Auto-generated method stub
+		
+		DataBase db = new DataBase();
+		Connection connection = db.conect();
+		
+		Statement stmt = connection.createStatement();
+		
+		/**
+		 * Se consultan todos los registros de la tabla CREDITOS
+		 */
+		ResultSet rs = stmt.executeQuery("SELECT * FROM CREDITOS");
+		
+		/*
+		 * Se recorren uno por uno los registros de la Tabla CREDITOS
+		 */
+		while(rs.next()){
+						
+			 System.out.print(rs.getString("estado"));
+		}
+		
+	
+	}
+
+}

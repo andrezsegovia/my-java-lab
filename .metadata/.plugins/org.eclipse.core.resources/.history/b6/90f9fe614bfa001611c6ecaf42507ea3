@@ -1,0 +1,17 @@
+package com.andrezsegovia.main;
+
+import java.sql.SQLException;
+
+import com.andrezsegovia.database.DataBase;
+
+public class Mian {
+
+	public static void main(String[] args) throws SQLException {
+		// TODO Auto-generated method stub
+		
+		DataBase db = new DataBase();
+		db.conect();
+	
+	}
+
+}

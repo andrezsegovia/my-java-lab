@@ -1,0 +1,9 @@
+package com.andrezsegovia.ws;
+
+import javax.servlet.http.HttpServlet;
+
+public class FilterServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 5121558064391739350L;
+
+}

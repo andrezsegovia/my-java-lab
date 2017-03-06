@@ -1,0 +1,29 @@
+package com.andrezsegovia.database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DataBase {
+	
+	private final String URL = "jdbc:mysql//localhost:3306/";
+	private final String DB = "sophosdb";
+	private final String USUARIO = "root";
+	private final String PASSWORD = "Rne*1614*+";
+	
+	public Connection connection = null;
+	
+	public Connection conect() throws SQLException{
+				
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection(URL+DB, USUARIO, PASSWORD);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			return connection;
+		}
+	}
+
+}

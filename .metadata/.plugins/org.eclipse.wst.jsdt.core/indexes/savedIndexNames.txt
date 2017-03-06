@@ -1,0 +1,6 @@
+INDEX VERSION 1.3+/home/ansecru/workspace/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3723648802.index
+3725241427.index
+2329511475.index
+10490454.index
+480355247.index

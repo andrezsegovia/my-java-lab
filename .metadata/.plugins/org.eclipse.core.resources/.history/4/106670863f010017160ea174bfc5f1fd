@@ -1,0 +1,5 @@
+package com.ansecru.di;
+
+public class MessagePrinter {
+
+}

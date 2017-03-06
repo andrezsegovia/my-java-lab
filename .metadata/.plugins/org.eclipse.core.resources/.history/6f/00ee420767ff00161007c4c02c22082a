@@ -1,0 +1,35 @@
+package com.andrezsegovia.ws;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.WriteListener;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+public class App extends HttpServlet
+{
+
+	private static final long serialVersionUID = -7099591509869696977L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String message = req.getParameter("message");
+		try(PrintWriter out = resp.getWriter()){
+			out.print(message);
+		}
+		
+		
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	}
+    
+	
+	
+}

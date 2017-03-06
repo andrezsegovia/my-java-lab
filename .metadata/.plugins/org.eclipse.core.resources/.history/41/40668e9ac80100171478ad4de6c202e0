@@ -1,0 +1,8 @@
+package com.ansecru.ws;
+
+import javax.persistence.Entity;
+
+@Entity
+public class User {
+
+}
