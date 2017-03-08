@@ -2,3 +2,6 @@
 **/dist/**
 
 
+/WebService-Example/nbproject/private/
+/WebService-Example-Client/nbproject/private/
+/WebServiceLib/nbproject/private/
