@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.andrezsegovia.platziTeachers.model.Teacher;
+import com.andrezsegovia.platziTeachers.model.TeacherSocialMedia;
+import com.andrezsegovia.platziTeachers.service.SocialMediaService;
 import com.andrezsegovia.platziTeachers.service.TeacherService;
 import com.andrezsegovia.platziTeachers.utils.CustomErrorType;
 
@@ -33,6 +36,9 @@ public class TeacherController {
 	
 	@Autowired
 	private TeacherService _teacherService;
+	
+	@Autowired
+	private SocialMediaService _socialMediaService; 
 
 	//POST
 	@RequestMapping(value="/teachers", method=RequestMethod.POST, headers="Accept=application/json")
@@ -166,7 +172,7 @@ public class TeacherController {
 			String avatarPath = teacher.getAvatar();
 			Path path = Paths.get(avatarPath);
 			File avatar = path.toFile();
-			if(avatar == null)
+			if(!avatar.exists())
 				return new ResponseEntity<>(new CustomErrorType("Teacher Avatar not found"), HttpStatus.NOT_FOUND);
 			byte[] avatarBytes = Files.readAllBytes(path);
 			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatarBytes);
@@ -174,12 +180,70 @@ public class TeacherController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return new ResponseEntity<>(new CustomErrorType("Teacher Avatar not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new CustomErrorType("Failed to get Avatar's Teacher"), HttpStatus.NOT_FOUND);
 		}
 	
 	}
 	
 	//DELETE IMAGE
+	@RequestMapping(value="/teachers/{id}/images", method=RequestMethod.DELETE, headers="Accept=application/json")
+	public ResponseEntity<?> deleteTecherAvatar(@PathVariable("id") Long idTeacher){
+		if(idTeacher == null || idTeacher < 0)
+			return new ResponseEntity<>(new CustomErrorType("Teacher Id is required"), HttpStatus.CONFLICT);
+		
+		Teacher teacher = _teacherService.findTeacherById(idTeacher);
+		if(teacher == null)
+			return new ResponseEntity<>(new CustomErrorType("Teacher whit Id "+idTeacher+" not found"), HttpStatus.NOT_FOUND);
+		
+		String avatarPath = teacher.getAvatar();
+		if(avatarPath.isEmpty() || avatarPath == null)
+			return new ResponseEntity<>(new CustomErrorType("This Teacher doesn't has Avatar"), HttpStatus.NOT_FOUND);
+		
+		Path path = Paths.get(avatarPath);
+		File avatarImage = path.toFile();
+		if(!avatarImage.exists())
+			return new ResponseEntity<>(new CustomErrorType("Teacher Avatar not found in the path"), HttpStatus.NOT_FOUND);
+		if(avatarImage.delete()) {
+			teacher.setAvatar("");
+			_teacherService.updateTeacher(teacher);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(new CustomErrorType("Failed to delete avartar's teacher"), HttpStatus.CONFLICT);
+		}
+	}
 	
-
+//	// SET TEACHER_SOCIAL_MEDIA RELACION
+//	@RequestMapping(value="/teachers/socialMedias", method=RequestMethod.PATCH, headers="Accept=application/json")
+//	public ResponseEntity<?> assignTeacherSocialMedia(@RequestBody Teacher teacher, UriComponentsBuilder uriComponentsBuilder){
+//		if(teacher == null)
+//			return new ResponseEntity<>(new CustomErrorType("Teacher is required"), HttpStatus.CONFLICT);
+//		if(teacher.getIdTeacher() == null || teacher.getIdTeacher() < 0 )
+//			return new ResponseEntity<>(new CustomErrorType("We need Teacher's Id"), HttpStatus.CONFLICT);
+//		
+//		Teacher teacherSaved = _teacherService.findTeacherById(teacher.getIdTeacher());
+//		if(teacherSaved == null)
+//			return new ResponseEntity<>(new CustomErrorType("Teacher whit Id "+teacher.getIdTeacher()+" not found"), HttpStatus.NOT_FOUND);
+//		
+//		if(teacher.getTeacherSocialMedias().isEmpty())
+//			return new ResponseEntity<>(new CustomErrorType("We need Teacher's Social Media"), HttpStatus.CONFLICT);
+//		else {
+//			Iterator<TeacherSocialMedia> teacherSocialMediaIterator = teacher.getTeacherSocialMedias().iterator();
+//			while(teacherSocialMediaIterator.hasNext()) {
+//				TeacherSocialMedia teacherSocialMedia = teacherSocialMediaIterator.next();
+//				if(teacherSocialMedia.getSocialMedia() == null || teacherSocialMedia.getNickName() == null)
+//					return new ResponseEntity<>(new CustomErrorType("We need Social Media's id and teacher's nickname"), HttpStatus.CONFLICT);
+//				else {
+//					TeacherSocialMedia teacherSocialMediaSaved = _socialMediaService.findSocialMediaByIdAndNickName(
+//							teacherSocialMedia.getSocialMedia().getIdSocialMedia(),
+//							teacherSocialMedia.getNickName());
+//					if(teacherSocialMediaSaved == null) {
+//						
+//					}else {
+//						
+//					}
+//						
+//				}
+//			}
+//		}
+//	}
 }
