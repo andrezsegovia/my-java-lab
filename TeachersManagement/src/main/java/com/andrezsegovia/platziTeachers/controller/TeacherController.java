@@ -152,5 +152,34 @@ public class TeacherController {
 			
 	}
 	
+	//GET IMAGE 
+	@RequestMapping(value="/teachers/{id}/images", method=RequestMethod.GET)
+	public ResponseEntity<?> getTeacherAvatar(@PathVariable("id") Long idTeacher){
+		if(idTeacher == null || idTeacher < 0)
+			return new ResponseEntity<>(new CustomErrorType("Teacher Id is required"), HttpStatus.CONFLICT);
+		
+		Teacher teacher = _teacherService.findTeacherById(idTeacher);
+		if(teacher == null)
+			return new ResponseEntity<>(new CustomErrorType("Teacher whit Id "+idTeacher+" not found"), HttpStatus.NOT_FOUND);
+		
+		try {
+			String avatarPath = teacher.getAvatar();
+			Path path = Paths.get(avatarPath);
+			File avatar = path.toFile();
+			if(avatar == null)
+				return new ResponseEntity<>(new CustomErrorType("Teacher Avatar not found"), HttpStatus.NOT_FOUND);
+			byte[] avatarBytes = Files.readAllBytes(path);
+			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(avatarBytes);
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return new ResponseEntity<>(new CustomErrorType("Teacher Avatar not found"), HttpStatus.NOT_FOUND);
+		}
+	
+	}
+	
+	//DELETE IMAGE
+	
 
 }
