@@ -74,4 +74,25 @@ public class SocialMediaDaoImpl extends AbstractSession implements SocialMediaDa
 		return null;
 	}
 
+	@Override
+	public TeacherSocialMedia findByIdSocialMediaAndIdTeacher(Long idSocialMedia, Long idTeacher) {
+		// TODO Auto-generated method stub
+		List<Object[]> objects = getSession().createQuery(
+				"from TeacherSocialMedia tsm join tsm.socialMedia sm join tsm.teacher t"
+				+ " where sm.idSocialMedia = :idSocialMedia "
+				+ "and t.idTeacher = :idTeacher").setParameter("idSocialMedia", idSocialMedia)
+				.setParameter("idTeacher", idTeacher).list();
+		
+		if(objects.size() > 0 ) {
+			for(Object[] object2: objects) {
+				for(Object object: object2) {
+					if(object instanceof TeacherSocialMedia) {
+						return (TeacherSocialMedia) object;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 }
